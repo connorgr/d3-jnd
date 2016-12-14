@@ -60,5 +60,5 @@ harder to discriminate).
 
 <a name="jndInterval" href="#jndInterval">#</a> d3.<b>jndInterval</b>(<i>percent</i>, <i>size</i>) [<>](https://github.com/connorgr/d3-jnd/blob/master/src/jnd.js#L64 "Source")<br>
 
-As d3.jndInterval except it returns the intervals along L*, a*, and b*
+As d3.noticeablyDifferent except it returns the intervals along L*, a*, and b*
 channels of CIELAB that produce differences equal to "1 JND".
