@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta property="og:image" content="http://connorgr.github.io/d3-cam02/static/mediathumb.png" />
+  <meta property="og:description" content="d3-jnd: a D3.js library to support just-noticeable difference (JND) color calculations." />
+  <meta property="og:url"content="http://connorgr.github.io/d3-jnd" />
+  <meta property="og:title" content="d3-jnd" />
+
+<style>
+body {
+  font: 16px/1.5em "Helvetica Neue", Helvetica, sans-serif;
+  margin: 0em 0em 4em 0em;
+}
+
+section {
+  padding: 0 1em;
+  text-align: left;
+}
+
+h1 {
+  color: #ccc;
+  line-height: 64px;
+  font-size: 64px;
+  font-weight: 200;
+  letter-spacing: -2px;
+  margin-bottom: 15px;
+  /*white-space: nowrap;*/
+  /*margin-top: 20px;*/
+}
+
+h1,
+h2 {
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: steelblue;
+  cursor: pointer;
+}
+a:not(:hover) {
+  text-decoration: none;
+}
+
+h2 {
+  border-bottom: 1px dotted #eee;
+  border-top: 5px solid #eee;
+  color: #000;
+  padding: 15px 0 15px 0;
+}
+p {
+  color: #333;
+}
+strong {
+  color: #000;
+}
+
+code {
+  background: #eee;
+  border: 1px dotted #ccc;
+  border-radius: 3px;
+  padding: 4px 8px;
+}
+
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.header {
+  background: #333;
+  margin: 0 auto;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.list-wideSeparation li {
+  margin-top: 1em;
+}
+
+.caption {
+  font-size: 12px;
+  line-spacing: 12px;
+}
+.aside {
+  position: relative;
+  padding-bottom: 5px;
+}
+.aside::before {
+  background: repeating-linear-gradient(
+    -55deg,
+    #eee,
+    #eee 3px,
+    #ddd 3px,
+    #ddd 6px
+  );
+  display: block;
+  margin-right: 5px;
+  padding: 5px 0 5px 0;
+  position: absolute;
+  width: 40px;
+  content: "\00a0";
+  top:0;
+  bottom:0;
+  left:0;
+}
+
+.aside > * {
+  margin-left: 50px;
+}
+
+.line {
+  fill: none;
+  stroke-width: 4px;
+}
+</style>
+
+<style type="text/css">
+  .st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+  .st1{fill:none;stroke:#999999;stroke-miterlimit:10;}
+  .st2{font-family:'Helvetica';}
+  .st3{font-size:14px;}
+  .st4{font-family:'Helvetica-Bold';}
+</style>
+
+</head>
+<body>
+  <section class="header">
+  <svg width="96" height="91">
+    <clipPath id="clip">
+      <path d="M0,0h7.75a45.5,45.5 0 1 1 0,91h-7.75v-20h7.75a25.5,25.5 0 1 0 0,-51h-7.75zm36.2510,0h32a27.75,27.75 0 0 1 21.331,45.5a27.75,27.75 0 0 1 -21.331,45.5h-32a53.6895,53.6895 0 0 0 18.7464,-20h13.2526a7.75,7.75 0 1 0 0,-15.5h-7.75a53.6895,53.6895 0 0 0 0,-20h7.75a7.75,7.75 0 1 0 0,-15.5h-13.2526a53.6895,53.6895 0 0 0 -18.7464,-20z"/>
+    </clipPath>
+    <linearGradient id="gradient-1" gradientUnits="userSpaceOnUse" x1="7" y1="64" x2="50" y2="107">
+      <stop offset="0" stop-color="#f9a03c"/>
+      <stop offset="1" stop-color="#f7974e"/>
+    </linearGradient>
+    <linearGradient id="gradient-2" gradientUnits="userSpaceOnUse" x1="2" y1="-2" x2="87" y2="84">
+      <stop offset="0" stop-color="#f26d58"/>
+      <stop offset="1" stop-color="#f9a03c"/>
+    </linearGradient>
+    <linearGradient id="gradient-3" gradientUnits="userSpaceOnUse" x1="45" y1="-10" x2="108" y2="53">
+      <stop offset="0" stop-color="#b84e51"/>
+      <stop offset="1" stop-color="#f68e48"/>
+    </linearGradient>
+    <g clip-path="url(#clip)">
+      <path d="M-100,-102m-27,0v300h300z" fill="url(#gradient-1)"/>
+      <path d="M-100,-102m27,0h300v300z" fill="url(#gradient-3)"/>
+      <path d="M-100,-102l300,300" fill="none" stroke="url(#gradient-2)" stroke-width="40"/>
+    </g>
+  </svg>
+  <br />
+  <svg id="seqLogo" width="250" height="50" style="background: rgb(48, 78, 149); margin-top: 50px; border: 1px solid rgb(0, 0, 0);">
+    <rect x="0" y="25" width="25" height="25"   style="fill: rgba(25, 25, 166, 0.0);"></rect>
+    <rect x="25" y="25" width="25" height="25"  style="fill: rgba(25, 25, 166, 0.04);"></rect>
+    <rect x="50" y="25" width="25" height="25"  style="fill: rgba(25, 25, 166, 0.08);"></rect>
+    <rect x="75" y="25" width="25" height="25"  style="fill: rgba(25, 25, 166, 0.12);"></rect>
+    <rect x="100" y="25" width="25" height="25" style="fill: rgba(25, 25, 166, 0.16);"></rect>
+    <rect x="125" y="25" width="25" height="25" style="fill: rgba(25, 25, 166, 0.20);"></rect>
+    <rect x="150" y="25" width="25" height="25" style="fill: rgba(25, 25, 166, 0.24);"></rect>
+    <rect x="175" y="25" width="25" height="25" style="fill: rgba(25, 25, 166, 0.28);"></rect>
+    <rect x="200" y="25" width="25" height="25" style="fill: rgba(25, 25, 166, 0.32);"></rect>
+    <rect x="225" y="25" width="25" height="25" style="fill: rgba(25, 25, 166, 0.36);"></rect>
+
+    <line x1="25" x2="25" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="50" x2="50" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="75" x2="75" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="100" x2="100" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="125" x2="125" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="150" x2="150" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="175" x2="175" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="200" x2="200" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+    <line x1="225" x2="225" y1="0" y2="50" stroke-width="0.5", stroke="rgba(0,0,0,0.25)"></line>
+
+  </svg>
+
+  <h1>
+    Just-Noticeable Differences
+  </h1>
+  <a href="http://gramaz.io">Connor Gramazio</a>
+</section>
+
+<div class="container">
+<section>
+  <p><strong>d3-jnd</strong> is a
+    <a href="http://d3js.org">D3</a> extension
+    that supports
+    <a href="https://en.wikipedia.org/wiki/Just-noticeable_difference">just-noticeable
+    difference</a> calculations for color based on work done by Maureen Stone,
+    Danielle Albers Szafir, and Vidya Setlur [<a href="#stonePDF">1</a>].</p>
+
+  <p>d3-jnd is open sourced
+    <a href="https://github.com/connorgr/d3-jnd">here</a>. If you want to
+    look at or use the compiled extension without downloading the source code,
+    check it out on <a href="https://unpkg.com/d3-jnd">unpkg</a>.</p>
+
+  <p>The just-noticeable difference functions in this library can be used to
+    determine whether two colors are too similar to be easily differentiated.
+    This is often critical for visualization color design because information
+    legibility directly affects usability.
+  </p>
+
+  <p>The two functions in d3-jnd are:
+    <ul class="list-wideSeparation">
+      <li><code>d3.noticeablyDifferent(…)</code>, which returns true or false
+          based on whether the two colors are noticeably different (i.e., ≥1
+          JND distant).</li>
+      <li><code>d3.jndLabInterval(…)</code>, which returns the minimum JND
+          intervals for CIELAB L*, a*, and b* color channels.
+          Each interval can be thought of as "1 JND" unit for that channel, and
+          it is often sufficient to only have one channel that is ≥1 JND to
+          maintain legibility.
+      </li>
+    </ul>
+
+    The conservativeness of JND distance predictions can be manipulated by
+    changing optional arguments that roughly correspond to what percentage
+    of people can easily see a difference and how large the colored area
+    is in terms of
+    <a href="https://en.wikipedia.org/wiki/Visual_angle">visual angle</a>.
+    The functions' defaults are respectively 50% and 0.1°.
+  </p>
+
+  <p>Be sure to check that colors that meet the recommended L*, a*, and b*
+    intervals still fall within displayable RGB color space when considering the
+    intervals that jndLabInterval provides.</p>
+
+
+  <strong>Table of contents</strong>
+  <ol>
+    <li>
+      <a href="#installation">Installation</a>
+    </li>
+    <li>
+      <a href="#whatsjnd">What is a JND?</a>
+      <ol>
+        <li><a href="#sizeEffect">Size affects discriminability</a></li>
+        <li><a href="#individualDifferences">Individual differences: percent of
+            people that see a difference</a></li>
+        <li><a href="#displayAndEnvironment">Err on the side of caution: display
+          and environmental differences</a></li>
+      </ol>
+    </li>
+    <li><a href="#examples">Examples</a></li>
+    <li><a href="#furtherReading">Further reading</a></li>
+  </ol>
+</section>
+
+<h2>Installation <a name="installation" href="#installation">📎</a></h2>
+<section>
+  <p>To access the latest version of d3-jnd, grab it on
+    <a href="https://unpkg.com/d3-jnd">unpkg</a>. Be sure to load d3-jnd
+    after d3-color is loaded (be it through d3.v4.js, d3-color.js, or
+    otherwise).</p>
+  <p>If installing and building from scratch, download the repo either through
+      <a href="https://github.com/connorgr/d3-jnd">GitHub</a> or through
+      <a href="https://npmjs.com/d3-jnd">npm</a>.
+      Once you've downloaded it, just run <code>npm install</code>, which will
+      install the required dependencies.
+      Note that building requires
+      <a href="https://nodejs.org/en/">node.js</a> and
+      <a href="https://www.npmjs.com/">npm</a>.</p>
+
+  <p>D3 module dependencies:
+    <a href="https://github.com/d3/d3-color">d3-color</a>.</p>
+</section>
+
+<h2>What is a JND? <a name="whatsjnd" href="#whatsjnd">📎</a></h2>
+<section>
+  <p>A just-noticeable difference (JND) is, "the amount [that a color] must be
+    changed in order for a difference to be noticeable"
+    [<a href="#wikiJND">2</a>].
+    Or, phrased another way, how different do two colors need to be in order for
+    humans to recognize them as different?
+    Given that this differentiability is directly dependent on human color vision,
+    d3-jnd performs JND calculations using CIELAB, which is a perceptually
+    modeled color space.</p>
+  </p>
+
+  <div class="aside">
+    <strong>Aside: CIELAB and perceptual color space</strong>
+    <p>CIELAB defines color in terms of its perceptual lightness (L*),
+      redness-to-greenness (a*), and blueness-to-yellowness (b*).
+      d3-jnd does color conversion for you, so it's not critical to become an
+      expert if you're just using the noticeablyDifferent function.
+      If you're interested in learning more, check out Wikipedia's entry on
+      CIELAB [<a href="#wikiCIELAB">3</a>] or the
+      <a href="http://connorgr.github.io/d3-cam02">d3-cam02 library</a> to learn
+      more about CIECAM02, which is an updated and more accurate perceptual
+      color space.
+      In this library we use CIELAB because it is what Stone, Szafir, and Setlur
+      used in their experiments to derive regression-based JND formulas.
+    </p>
+  </div>
+
+  <h3>Size affects discriminability <a name="sizeEffect" href="#sizeEffect">📎</a></h3>
+  <p>Unfortunately, determining whether two colors are discriminable is an
+    involved process in part because it is harder to discriminate colors that
+    are smaller in area. You can see this for yourself in the example below.</p>
+
+  <div class="container">
+    <svg width="170" height="100">
+      <g>
+        <rect x="0" y="0" width="75" height="75" fill="rgb(48, 78, 149)"></rect>
+        <rect x="75" y="0" width="75" height="75" fill="rgb(58, 91, 169)"></rect>
+      </g>
+
+      <g transform="translate(160, 37.5)">
+        <rect x="0" y="0" width="5" height="5" fill="rgb(48, 78, 149)"></rect>
+        <rect x="5" y="0" width="5" height="5" fill="rgb(58, 91, 169)"></rect>
+      </g>
+    </svg>
+  </div>
+
+  <p>Because size in this context is a physical property that can greatly vary
+    with viewing conditions (e.g., dpi or viewing distance with
+    phones compared to laptops),
+    d3-jnd uses visual angle as a measurement of size rather than pixels.
+    At arms length, the width of a thumb's knuckle is approximately 2° and an
+    index fingernail is approximately 1°.
+    d3-jnd uses a default colored area size assumption of 0.1°, which was
+    selected as a conservatively small size without resulting in overly
+    restrictive color selection; however, the default assumed size can be
+    overridden to create more generous or strict JND distances.
+  </p>
+
+  <div class="aside">
+    <strong>Aside: size</strong>
+    <p>The physical size of visualizations can affect usability in a
+      number of ways that include, but are not limited to, color legibility.
+      If you're interested in
+      learning more, we suggest Connor C. Gramazio, Karen B. Schloss, David H.
+      Laidlaw's paper on size's affect on visualization search
+      [<a href="#gramazioSizePDF">4</a>] and Maureen Stone's IEEE Viewpoint
+      article [<a href="#stoneSizeMatters">5</a>].
+    </p>
+  </div>
+
+  <h3>Individual differences: percent of people that see a difference
+      <a name="individualDifferences" href="#individualDifferences">📎</a></h3>
+  <p>Due to differences between people's perceptual acuity, the JND intervals
+    that d3-jnd provides are predictions, not absolute truth.
+    To accomodate this ambiguity, the d3-jnd functions' percentage argument can
+    be used to incorporate what percentage of your audience should quickly and
+    easily notice a difference in color.
+    The default value used by d3-jnd is 50%, given that using 50% to refer to
+    JNDs is standard practice in perception research; however, whether that
+    threshold is sufficient for a visualization is contextually dependent.
+    We encourage d3-jnd users to carefully consider whether they need to use
+    a more conservative number (e.g., require JND intervals where an estimated
+    95% of users could reliably differentiate colors).
+  </p>
+
+  <div class="aside">
+    <strong>Aside: atypical color vision</strong>
+    <p>Another important individual difference to consider is people's different
+      perceptions of color (e.g., red-green or blue-yellow color vision
+      deficiencies). Given that a large portion of the population perceive color
+      differently, consider whether the recommended L*, a*, or *b intervals you
+      choose to use are sufficient. For example, a* modulates the
+      redness-to-greeness of color and differences along only this channel might
+      not be visible to all.
+    </p>
+  </div>
+
+  <h3>Err on the side of caution: display and environmental differences
+      <a name="displayAndEnvironment" href="#displayAndEnvironment">📎</a></h3>
+  <p>Although two colors might appear discriminable on your own monitor,
+    consider whether that discriminability would be visible on your audience's
+    displays. Developers and designers often use bright monitors that support
+    wide color gamuts (e.g., any Apple device), which is not representative of
+    displays used by the general population. Further, color can be aversely
+    affected by environment (e.g., indoor vs. outdoor lighting).
+    It is important to treat d3-jnd as only a prediction or recommendation of
+    what may be noticeably different rather than an absolute truth.</p>
+</section>
+
+<h2>Examples <a name="examples" href="#examples">📎</a></h2>
+<section>
+  <p><a href="http://bl.ocks.org/connorgr/84aaa3a86b7c1231be5221d26591a906">Interactive demo of how changing percent and size JND arguments can alter L*, a*, and b* intervals.</a></p>
+</section>
+
+<h2>Further reading <a name="furtherReading" href="#furtherReading">📎</a></h2>
+<section>
+  <h3>Citations</h3>
+  <ol>
+    <li><a href="https://research.tableau.com/paper/engineering-model-color-difference-function-size" id="stonePDF">Stone, Szafir, Setlur. "An Engineering Model for Color Difference as a Function of Size," <em>22nd IS&amp;T Color and Imaging Conference (Boston, November 3-7, 2014)</em>. 2014.</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Just-noticeable_difference" id="wikiJND">Wikipedia's entry on just-noticeable differences</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Lab_color_space" id="wikiCIELAB">Wikipedia's entry on CIELAB color space</a></li>
+    <li><a href="http://vis.cs.brown.edu/docs/pdf/Gramazio-2014-RVS.pdf">Connor C. Gramazio, Karen B. Schloss, David H. Laidlaw. "The relation between visualization size, grouping, and user performance," <em>IEEE TVCG (Proceedings of Information Visualization)</em>. 2014.</a></li>
+    <li><a href="https://research.tableau.com/paper/color-perception-size-matters">Maureen Stone. "In Color Perception, Size Matters," <em>IEEE CG&amp;A Viewpoints</em>. 2012.</a></li>
+  </ol>
+
+  <h3>Other useful links</h3>
+  <ol>
+    <li><a href="http://gramaz.io/colorgorical">Colorgorical, a color palette
+      tool by Connor Gramazio et al., that uses Stone, Szafir, and Setlur's JND
+      function as one way to accomodate color discriminability</a></li>
+  </ol>
+</section>
+</div>
+
+<p style="width: 100%; text-align: center; margin-top: 100px;color: #aaa;">Provided free-to-use and open-sourced. See Github for specific licensing information.</p>
+
+</body>
+</html>

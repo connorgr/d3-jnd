@@ -1,0 +1,44 @@
+{
+  "name": "d3-jnd",
+  "version": "0.1.0",
+  "description": "Just-noticeable differences for colors in CEILAB color space",
+  "keywords": [
+    "d3",
+    "d3-module",
+    "color",
+    "jnd",
+    "legibility",
+    "discriminability",
+    "just noticeable difference",
+    "CIELAB",
+    "Lab"
+  ],
+  "homepage": "https://github.com/connorgr/d3-jnd",
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "Connor Gramazio",
+    "url": "http://gramaz.io"
+  },
+  "main": "build/d3-jnd.js",
+  "jsnext:main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/connorgr/d3-jnd.git"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3-color:d3 -n d3 -o build/d3-jnd.js -- index.js",
+    "test": "tape 'test/**/*-test.js' && eslint index.js src test",
+    "prepublish": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-jnd.js -c -m -o build/d3-jnd.min.js",
+    "postpublish": "git push && git push --tags && zip -j build/d3-jnd.zip -- LICENSE README.md build/d3-jnd.js build/d3-jnd.min.js"
+  },
+  "dependencies": {
+    "d3-color": "1"
+  },
+  "devDependencies": {
+    "eslint": "3",
+    "package-preamble": "0.0",
+    "rollup": "0.34",
+    "tape": "4",
+    "uglify-js": "2"
+  }
+}
