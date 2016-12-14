@@ -15,15 +15,12 @@
   ],
   "homepage": "https://github.com/connorgr/d3-jnd",
   "license": "BSD-3-Clause",
-  "author": {
-    "name": "Connor Gramazio",
-    "url": "http://gramaz.io"
-  },
+  "author": "Connor Gramazio (http://gramaz.io)",
   "main": "build/d3-jnd.js",
   "jsnext:main": "index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/connorgr/d3-jnd.git"
+    "url": "git+https://github.com/connorgr/d3-jnd.git"
   },
   "scripts": {
     "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -g d3-color:d3 -n d3 -o build/d3-jnd.js -- index.js",
@@ -40,5 +37,11 @@
     "rollup": "0.34",
     "tape": "4",
     "uglify-js": "2"
+  },
+  "bugs": {
+    "url": "https://github.com/connorgr/d3-jnd/issues"
+  },
+  "directories": {
+    "test": "test"
   }
 }
