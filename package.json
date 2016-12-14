@@ -1,6 +1,6 @@
 {
   "name": "d3-jnd",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Just-noticeable differences for colors in CEILAB color space",
   "keywords": [
     "d3",
