@@ -83,5 +83,5 @@ export function noticeablyDifferent(c1, c2, s, p) {
   c1 = lab(c1);
   c2 = lab(c2);
 
-  return c1.l-c2.l >= jnd.l || c1.a-c2.a >= jnd.a || c1.b-c2.b >= jnd.b;
+  return (Math.abs(c1.l-c2.l) >= jnd.l) || (Math.abs(c1.a-c2.a) >= jnd.a) || (Math.abs(c1.b-c2.b) >= jnd.b);
 }
