@@ -6,6 +6,7 @@ To access the latest version of d3-jnd, grab it on
 
 This module extends D3 to support color just-noticeable difference (JND)
 research by Maureen Stone, Danielle Albers Szafir, and Vidya Setlur ([link](https://research.tableau.com/paper/engineering-model-color-difference-function-size)).
+
 ```
 @inproceedings{stone-2014-emc,
   title={An engineering model for color difference as a function of size},
@@ -28,7 +29,7 @@ JND intervals, and should be treated as guidelines rather than absolute truth.
 See the [d3-jnd website](https://connorgr.github.io/d3-jnd) for more information
 about how to manipulate d3-jnd function arguments appropriately.
 
-```
+```js
 var c1 = d3.lab('black'),
     c2 = d3.rgb('white'),
     legible = d3.noticeablyDifferent(c1, c2); // true
@@ -39,7 +40,6 @@ var strictlyLegible = d3.noticeablyDifferent(c1, c2, 0.95, 0.1);
 ```
 
 # Installation
-###
 
 After downloading the repo, run ``npm install``, which will install any
 dependencies. You can optionally install from npm opposed to cloning directly
@@ -48,7 +48,6 @@ from GitHub. Make sure to load d3-cam02 after d3-color.
 **Dependencies:** [d3-color](https://github.com/d3/d3-color)
 
 ## API Reference
-###
 
 <a name="noticeablyDifferent" href="#noticeablyDifferent">#</a> d3.<b>noticeablyDifferent</b>(<i>color</i>, <i>color</i>[, <i>percent</i>, <i>size</i>]) [<>](https://github.com/connorgr/d3-jnd/blob/master/src/jnd.js#L78 "Source")<br>
 
