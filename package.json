@@ -1,6 +1,6 @@
 {
   "name": "d3-jnd",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Just-noticeable differences for colors in CEILAB color space",
   "keywords": [
     "d3",
@@ -17,6 +17,7 @@
   "license": "BSD-3-Clause",
   "author": "Connor Gramazio (http://gramaz.io)",
   "main": "build/d3-jnd.js",
+  "module": "index",
   "jsnext:main": "index",
   "repository": {
     "type": "git",
